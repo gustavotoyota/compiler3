@@ -1,10 +1,10 @@
 package AST;
 public class DeclGroup {
     public final String type;
-    public final NameArray nameArray;
+    public final IdList idList;
     
-    public DeclGroup(String type, NameArray nameArray) {
+    public DeclGroup(String type, IdList idList) {
         this.type = type;
-        this.nameArray = nameArray;
+        this.idList = idList;
     }
 }

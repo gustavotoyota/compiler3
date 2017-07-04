@@ -1,3 +1,4 @@
+import AST.IdList;
 import AST.Details;
 import AST.AtomExpr;
 import AST.Factor;
@@ -106,12 +107,21 @@ public class Compiler {
         do {
             String type = lexer.obtainString(Group.TYPE);
             
-            NameArray nameArray = parseNameArray();
+            IdList idList = parseIdList();
             
-            declGroups.add(new DeclGroup(type, nameArray));
+            declGroups.add(new DeclGroup(type, idList));
         } while (lexer.check(Group.TYPE));
         
         return new Declaration(declGroups);
+    }
+    private IdList parseIdList() {
+        ArrayList<NameArray> nameArrays = new ArrayList<>();
+        
+        do {
+            nameArrays.add(parseNameArray());
+        } while (lexer.accept(Symbol.COMMA));
+        
+        return new IdList(nameArrays);
     }
     private Stmt parseStmt() {
         if (lexer.check(Group.SIMPLE_STMT))
@@ -297,7 +307,6 @@ public class Compiler {
         
         return new OrTest(andTests);
     }
-
     private AndTest parseAndTest() {
         ArrayList<NotTest> notTests = new ArrayList<>();
         
@@ -307,7 +316,6 @@ public class Compiler {
         
         return new AndTest(notTests);
     }
-
     private NotTest parseNotTest() {
         boolean not = lexer.accept(Symbol.NOT);
         
@@ -315,7 +323,6 @@ public class Compiler {
         
         return new NotTest(not, comp);
     }
-
     private Comp parseComparison() {
         ArrayList<Expr> exprs = new ArrayList<>();
         ArrayList<String> opers = new ArrayList<>();
@@ -330,7 +337,6 @@ public class Compiler {
         
         return new Comp(exprs, opers);
     }
-
     private Expr parseExpr() {
         ArrayList<Term> terms = new ArrayList<>();
         ArrayList<String> opers = new ArrayList<>();
@@ -345,7 +351,6 @@ public class Compiler {
         
         return new Expr(terms, opers);
     }
-
     private Term parseTerm() {
         ArrayList<Factor> factors = new ArrayList<>();
         ArrayList<String> opers = new ArrayList<>();
@@ -360,7 +365,6 @@ public class Compiler {
         
         return new Term(factors, opers);
     }
-
     private Factor parseFactor() {
         String signal = "";
         if (lexer.check(Group.SIGNAL))
@@ -374,7 +378,6 @@ public class Compiler {
         
         return new Factor(signal, atomExpr, exponent);
     }
-
     private AtomExpr parseAtomExpr() {
         Atom atom = parseAtom();
         Details details = null;
@@ -383,7 +386,6 @@ public class Compiler {
         
         return new AtomExpr(atom, details);
     }
-
     private Details parseDetails() {
         boolean isFunc = false;
         boolean isInt = false;
