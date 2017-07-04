@@ -1,5 +1,9 @@
-import AST.FuncDef;
-
+import AST.Details;
+import AST.AtomExpr;
+import AST.Factor;
+import AST.Term;
+import AST.Expr;
+import AST.Comp;
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -37,7 +41,6 @@ public class Compiler {
         
         return new Program(name, funcDefs);
     }
-    
     private FuncDef parseFuncDef() {
         lexer.expect(Symbol.DEF);
         
@@ -60,9 +63,8 @@ public class Compiler {
         
         lexer.expect(Symbol.RIGHTBRACE);
         
-        return new FuncDef();
+        return new FuncDef(name, argsList, type, body);
     }
-    
     private ArgsList parseArgsList() {
         ArrayList<Argument> arguments = new ArrayList<>();
         
@@ -75,7 +77,6 @@ public class Compiler {
         
         return new ArgsList(arguments);
     }
-    
     private NameArray parseNameArray() {
         String name = lexer.obtainString(Symbol.IDENT);
         
@@ -88,7 +89,6 @@ public class Compiler {
         
         return new NameArray(name, length);
     }
-    
     private Body parseBody() {
         Declaration declaration = null;
         if (lexer.check(Group.TYPE))
@@ -100,7 +100,6 @@ public class Compiler {
         
         return new Body(declaration, stmts);
     }
-
     private Declaration parseDeclaration() {
         ArrayList<AST.DeclGroup> declGroups = new ArrayList<>();
         
@@ -114,7 +113,6 @@ public class Compiler {
         
         return new Declaration(declGroups);
     }
-
     private Stmt parseStmt() {
         if (lexer.check(Group.SIMPLE_STMT))
             return parseSimpleStmt();
@@ -123,7 +121,6 @@ public class Compiler {
         error.signal("Statement esperado");
         return null;
     }
-
     private SimpleStmt parseSimpleStmt() {
         if (lexer.check(Symbol.IDENT)) {
             String name = lexer.obtainString(Symbol.IDENT);
@@ -140,7 +137,6 @@ public class Compiler {
         error.signal("Statement simples esperado");
         return null;
     }
-
     private CompoundStmt parseCompoundStmt() {
         if (lexer.check(Symbol.IF))
             return parseIfStmt();
@@ -151,7 +147,6 @@ public class Compiler {
         error.signal("Statement compost esperado");
         return null;
     }
-
     private SimpleStmt parseExprStmt(String name) {
         Atom index = null;
         if (lexer.accept(Symbol.LEFTBRACKET)) {
@@ -170,9 +165,10 @@ public class Compiler {
         } else
             value = parseOrTest();
         
-        return new ExprStmt(name, value, list, isValue);
+        lexer.expect(Symbol.SEMICOLON);
+        
+        return new ExprStmt(name, index, value, list, isValue);
     }
-
     private SimpleStmt parsePrintStmt() {
         lexer.expect(Symbol.PRINT);
         
@@ -184,40 +180,229 @@ public class Compiler {
         
         return new PrintStmt(values);
     }
-
     private SimpleStmt parseBreakStmt() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        lexer.expect(Symbol.BREAK);
+        lexer.expect(Symbol.SEMICOLON);
+        
+        return new BreakStmt();
     }
-
     private SimpleStmt parseReturnStmt() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        lexer.expect(Symbol.RETURN);
+        
+        OrTest value = null;
+        if (lexer.check(Group.OR_TEST))
+            value = parseOrTest();
+        
+        lexer.expect(Symbol.SEMICOLON);
+        
+        return new ReturnStmt(value);
     }
-
     private SimpleStmt parseFuncStmt(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        lexer.expect(Symbol.LEFTPAR);
+        
+        OrTest param = null;
+        if (lexer.check(Group.OR_TEST))
+            param = parseOrTest();
+        
+        lexer.expect(Symbol.RIGHTPAR);
+        lexer.expect(Symbol.SEMICOLON);
+        
+        return new FuncStmt(name, param);
     }
-
     private CompoundStmt parseIfStmt() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        lexer.expect(Symbol.IF);
+        
+        OrTest cond = parseOrTest();
+        
+        lexer.expect(Symbol.LEFTBRACE);
+        
+        ArrayList<Stmt> ifStmts = new ArrayList<>();
+        while (lexer.check(Group.STMT))
+            ifStmts.add(parseStmt());
+        
+        lexer.expect(Symbol.RIGHTBRACE);
+        
+        ArrayList<Stmt> elseStmts = new ArrayList<>();
+        if (lexer.accept(Symbol.ELSE)) {
+            lexer.expect(Symbol.LEFTBRACE);
+            
+            while (lexer.check(Group.STMT))
+                elseStmts.add(parseStmt());
 
+            lexer.expect(Symbol.RIGHTBRACE);
+        }
+         
+        return new IfStmt(cond, ifStmts, elseStmts);
+    }
     private CompoundStmt parseWhileStmt() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        lexer.expect(Symbol.WHILE);
+        
+        OrTest cond = parseOrTest();
+        
+        lexer.expect(Symbol.LEFTBRACE);
+        
+        ArrayList<Stmt> stmts = new ArrayList<>();
+        while (lexer.check(Group.STMT))
+            stmts.add(parseStmt());
+        
+        lexer.expect(Symbol.RIGHTBRACE);
+        
+        return new WhileStmt(cond, stmts);
     }
-
     private CompoundStmt parseForStmt() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        lexer.expect(Symbol.FOR);
+        
+        String iter = lexer.obtainString(Symbol.IDENT);
+        
+        lexer.expect(Symbol.INRANGE);
+        
+        lexer.expect(Symbol.LEFTPAR);
+        
+        int begin = lexer.obtainInt();
+        
+        lexer.expect(Symbol.COMMA);
+        
+        int end = lexer.obtainInt();
+        
+        lexer.expect(Symbol.RIGHTPAR);
+        
+        lexer.expect(Symbol.LEFTBRACE);
+        
+        ArrayList<Stmt> stmts = new ArrayList<>();
+        while (lexer.check(Group.STMT))
+            stmts.add(parseStmt());
+        
+        lexer.expect(Symbol.RIGHTBRACE);
+        
+        return new ForStmt(iter, begin, end, stmts);
     }
-
     private Atom parseAtom() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
-
     private OrList parseOrList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<OrTest> orTests = new ArrayList<>();
+        
+        do {
+            orTests.add(parseOrTest());
+        } while (lexer.accept(Symbol.COMMA));
+        
+        return new OrList(orTests);
+    }
+    private OrTest parseOrTest() {
+        ArrayList<AndTest> andTests = new ArrayList<>();
+        
+        do {
+            andTests.add(parseAndTest());
+        } while (lexer.accept(Symbol.OR));
+        
+        return new OrTest(andTests);
     }
 
-    private OrTest parseOrTest() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private AndTest parseAndTest() {
+        ArrayList<NotTest> notTests = new ArrayList<>();
+        
+        do {
+            notTests.add(parseNotTest());
+        } while (lexer.accept(Symbol.AND));
+        
+        return new AndTest(notTests);
+    }
+
+    private NotTest parseNotTest() {
+        boolean not = lexer.accept(Symbol.NOT);
+        
+        Comp comp = parseComparison();
+        
+        return new NotTest(not, comp);
+    }
+
+    private Comp parseComparison() {
+        ArrayList<Expr> exprs = new ArrayList<>();
+        ArrayList<String> opers = new ArrayList<>();
+        
+        boolean loop;
+        do {
+            exprs.add(parseExpr());
+            
+            loop = lexer.check(Group.COMP_OP);
+            opers.add(lexer.obtainString(Group.COMP_OP));
+        } while (loop);
+        
+        return new Comp(exprs, opers);
+    }
+
+    private Expr parseExpr() {
+        ArrayList<Term> terms = new ArrayList<>();
+        ArrayList<String> opers = new ArrayList<>();
+        
+        boolean loop;
+        do {
+            terms.add(parseTerm());
+            
+            loop = lexer.check(Group.TERM_OP);
+            opers.add(lexer.obtainString(Group.TERM_OP));
+        } while (loop);
+        
+        return new Expr(terms, opers);
+    }
+
+    private Term parseTerm() {
+        ArrayList<Factor> factors = new ArrayList<>();
+        ArrayList<String> opers = new ArrayList<>();
+        
+        boolean loop;
+        do {
+            factors.add(parseFactor());
+            
+            loop = lexer.check(Group.FACTOR_OP);
+            opers.add(lexer.obtainString(Group.FACTOR_OP));
+        } while (loop);
+        
+        return new Term(factors, opers);
+    }
+
+    private Factor parseFactor() {
+        String signal = "";
+        if (lexer.check(Group.SIGNAL))
+            signal = lexer.obtainString(Group.SIGNAL);
+        
+        AtomExpr atomExpr = parseAtomExpr();
+        
+        Factor exponent = null;
+        if (lexer.accept(Symbol.POW))
+            exponent = parseFactor();
+        
+        return new Factor(signal, atomExpr, exponent);
+    }
+
+    private AtomExpr parseAtomExpr() {
+        Atom atom = parseAtom();
+        Details details = null;
+        if (lexer.check(Group.DETAILS))
+            details = parseDetails();
+        
+        return new AtomExpr(atom, details);
+    }
+
+    private Details parseDetails() {
+        boolean isFunc = false;
+        boolean isInt = false;
+        OrList orList = null;
+        int intValue = 0;
+        String stringValue = "";
+        if (lexer.accept(Symbol.LEFTBRACKET)) {
+            isInt = lexer.checkIntValue();
+            if (isInt)
+                intValue = lexer.obtainInt();
+            else
+                stringValue = lexer.obtainString(Symbol.IDENT);
+        } else if (lexer.accept(Symbol.LEFTPAR)) {
+            isFunc = true;
+            if (lexer.check(Group.OR_LIST))
+                orList = parseOrList();
+        } else
+            error.signal("Detalhes de átomo esperados");
+        
+        return new Details(isFunc, orList, isInt, intValue, stringValue);
     }
 }
