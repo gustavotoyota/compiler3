@@ -17,7 +17,7 @@ public class Atom {
     public final Num number;
     public final String string;
 
-    public Atom(Symbol type, String name, Num num, String string) {
+    public Atom(Symbol type, String name, Num number, String string) {
         this.type = type;
         this.name = name;
         this.number = number;
