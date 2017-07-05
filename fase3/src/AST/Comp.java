@@ -16,7 +16,7 @@ public class Comp {
         for (int i = 0; i < exprs.size(); ++i) {
             exprs.get(i).genC(pw);
             if (i < exprs.size() - 1)
-                pw.print(opers.get(i));
+                pw.print(" " + opers.get(i) + " ");
         }
     }
 }

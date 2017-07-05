@@ -21,15 +21,16 @@ public class ForStmt extends CompoundStmt {
     @Override
     public void genC(PW pw) {        
         pw.indent();
-        pw.print("for (" + iter + "=" + Integer.toString(begin.intValue) + "; " + iter);
+        pw.print("for (" + iter + " = " + Integer.toString(begin.intValue) + "; " + iter);
         if (begin.intValue < end.intValue)
-            pw.println("<" + Integer.toString(end.intValue) + "; " + iter + "++) {");
+            pw.println(" < " + Integer.toString(end.intValue) + "; " + iter + "++) {");
         else
-            pw.println(">" + Integer.toString(end.intValue) + "; " + iter + "--) {");
+            pw.println(" > " + Integer.toString(end.intValue) + "; " + iter + "--) {");
         pw.increment();
         for (int i = 0; i < stmts.size(); ++i)
             stmts.get(i).genC(pw);
         pw.decrement();
+        pw.indent();
         pw.println("}");
     }
 }

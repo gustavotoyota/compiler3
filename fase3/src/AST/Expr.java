@@ -16,7 +16,7 @@ public class Expr {
         for (int i = 0; i < terms.size(); ++i) {
             terms.get(i).genC(pw);
             if (i < terms.size() - 1)
-                pw.print(opers.get(i));
+                pw.print(" " + opers.get(i) + " ");
         }
     }
 }

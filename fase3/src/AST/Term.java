@@ -16,7 +16,7 @@ public class Term {
         for (int i = 0; i < factors.size(); ++i) {
             factors.get(i).genC(pw);
             if (i < factors.size() - 1)
-                pw.print(opers.get(i));
+                pw.print(" " + opers.get(i) + " ");
         }
     }
 }

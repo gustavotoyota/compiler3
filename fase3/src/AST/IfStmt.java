@@ -33,7 +33,8 @@ public class IfStmt extends CompoundStmt {
             for (int i = 0; i < elseStmts.size(); ++i)
                 elseStmts.get(i).genC(pw);
             pw.decrement();
-            pw.println("}");
+            pw.indent();
+            pw.println("}");            
         }
     }
     

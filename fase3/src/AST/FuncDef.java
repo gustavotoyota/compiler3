@@ -1,6 +1,7 @@
 package AST;
 
 import Auxiliar.PW;
+import Auxiliar.SymbolTable;
 
 public class FuncDef {
     public String name;
@@ -32,6 +33,8 @@ public class FuncDef {
                 break;
         }
         
+        SymbolTable.localTable = SymbolTable.globalTable.get(name);
+        
         pw.indent();
         pw.print(funcType + " " + name + "(");
         if (argsList != null)
@@ -42,5 +45,6 @@ public class FuncDef {
         pw.decrement();
         pw.indent();
         pw.println("}");
+        pw.println("");
     }
 }

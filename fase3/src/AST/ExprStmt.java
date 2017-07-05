@@ -20,31 +20,35 @@ public class ExprStmt extends SimpleStmt {
     
     @Override
     public void genC(PW pw) {
-        boolean isString = "string".equals(SymbolTable.symbolTable.get(name).type);
-        
-        pw.indent(); 
-        if (isString)
-            pw.print("strcpy(");
-        pw.print(name);
-        if (index != null) {
-            pw.print("[");
-            index.genC(pw);
-            pw.print("]");
-        }
-        if (isString)
-            pw.print(", ");
-        else
-            pw.print(" = ");
-        
+        boolean isString = "string".equals(SymbolTable.localTable.get(name).type);
+                 
         if (isList) {
-            pw.print("[");
-            list.genC(pw);
-            pw.print("]");
-        } else
+            for (int i = 0; i < list.orTests.size(); ++i) {
+                pw.indent();
+                pw.print(name + "[" + Integer.toString(i) + "] = ");
+                list.orTests.get(i).genC(pw);
+                pw.println(";");
+            }
+        } else {
+            pw.indent();
+            if (isString)
+                pw.print("strcpy(");
+            pw.print(name);
+            if (index != null) {
+                pw.print("[");
+                index.genC(pw);
+                pw.print("]");
+            }
+            if (isString)
+                pw.print(", ");
+            else
+                pw.print(" = ");
+
             value.genC(pw); 
-        
-        if (isString)
-            pw.print(")");
-        pw.println(";");
+
+            if (isString)
+                pw.print(")");
+            pw.println(";");
+        }
     }
 }

@@ -6,9 +6,9 @@ import AST.SimpleStmt;
 
 public class FuncStmt extends SimpleStmt {
     public final String name;
-    public final OrTest param;
+    public final OrList param;
 
-    public FuncStmt(String name, OrTest param) {
+    public FuncStmt(String name, OrList param) {
         this.name = name;
         this.param = param;
     }

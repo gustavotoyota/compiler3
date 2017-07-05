@@ -15,7 +15,8 @@ import AST.*;
 
 public class Compiler {
     public Program compile(char []input, String fileName) {
-        SymbolTable.symbolTable = new HashMap<>();        
+        SymbolTable.globalTable = new HashMap<>();        
+        SymbolTable.localTable = new HashMap<>();
         error = new CompilerError(fileName);
         lexer = new Lexer(input, error);
         error.setLexer(lexer);
@@ -62,9 +63,12 @@ public class Compiler {
         
         lexer.expect(Symbol.LEFTBRACE);
         
-        Body body = parseBody();
+        Body body = parseBody();                
         
         lexer.expect(Symbol.RIGHTBRACE);
+                
+        SymbolTable.globalTable.put(name, (HashMap)SymbolTable.localTable.clone());
+        SymbolTable.localTable.clear();
         
         return new FuncDef(name, argsList, type, body);
     }
@@ -73,7 +77,8 @@ public class Compiler {
         
         do {
             String type = lexer.obtain(Group.TYPE);
-            NameArray nameArray = parseNameArray();            
+            NameArray nameArray = parseNameArray();       
+            SymbolTable.localTable.put(nameArray.name, new Variable(type, nameArray.length));
             arguments.add(new Argument(type, nameArray));
         } while (lexer.accept(Symbol.COMMA));
         
@@ -111,7 +116,7 @@ public class Compiler {
             IdList idList = parseIdList();
             if (idList != null && idList.nameArrays != null) {
                 for (int i = 0; i < idList.nameArrays.size(); ++i)
-                    if (SymbolTable.symbolTable.put(idList.nameArrays.get(i).name, new Variable(type, idList.nameArrays.get(i).length)) != null)
+                    if (SymbolTable.localTable.put(idList.nameArrays.get(i).name, new Variable(type, idList.nameArrays.get(i).length)) != null)
                         error.signal("Variável " + idList.nameArrays.get(i).name + " já declarada");
             }
             declGroups.add(new DeclGroup(type, idList));
@@ -219,9 +224,9 @@ public class Compiler {
     private SimpleStmt parseFuncStmt(String name) {
         lexer.expect(Symbol.LEFTPAR);
         
-        OrTest param = null;
-        if (lexer.check(Group.OR_TEST))
-            param = parseOrTest();
+        OrList param = null;
+        if (lexer.check(Group.OR_LIST))
+            param = parseOrList();
         
         lexer.expect(Symbol.RIGHTPAR);
         lexer.expect(Symbol.SEMICOLON);
@@ -302,15 +307,17 @@ public class Compiler {
         String string = "";
         
         switch (type) {
-        case IDENT:
-            name = lexer.obtain(Symbol.IDENT);           
-            break;
-        case NUMBER:
-            number = parseNum(false);
-            break;
-        case STRINGLIT:
-            string = lexer.obtain(Symbol.STRINGLIT);
-            break;
+            case IDENT:
+                name = lexer.obtain(Symbol.IDENT);           
+                break;
+            case NUMBER:
+                number = parseNum(false);
+                break;
+            case STRINGLIT:
+                string = lexer.obtain(Symbol.STRINGLIT);
+                break;
+            default:
+                lexer.nextToken();
         }
         
         return new Atom(type, name, number, string);
@@ -358,8 +365,33 @@ public class Compiler {
             exprs.add(parseExpr());
             
             loop = lexer.check(Group.COMP_OP);
-            if (loop)
-                opers.add(lexer.obtain(Group.COMP_OP));
+            if (loop) {
+                String compOp = "";
+                switch(lexer.getToken()) {
+                    case LT:
+                        compOp = "<";
+                        break;
+                    case LE:
+                        compOp = "<=";
+                        break;
+                    case EQ:
+                        compOp = "==";
+                        break;
+                    case GT:
+                        compOp = ">";
+                        break;
+                    case GE:
+                        compOp = ">=";
+                        break;
+                    case NEQ:
+                        compOp = "!=";
+                        break;
+                    default:
+                        break;
+                }
+                opers.add(compOp);
+                lexer.nextToken();
+            }
         } while (loop);
         
         return new Comp(exprs, opers);
@@ -373,8 +405,10 @@ public class Compiler {
             terms.add(parseTerm());
             
             loop = lexer.check(Group.TERM_OP);
-            if (loop)
-                opers.add(lexer.obtain(Group.TERM_OP));
+            if (loop) {
+                opers.add(lexer.getToken() == Symbol.PLUS ? "+" : "-");
+                lexer.nextToken();
+            }
         } while (loop);
         
         return new Expr(terms, opers);
@@ -388,8 +422,10 @@ public class Compiler {
             factors.add(parseFactor());
             
             loop = lexer.check(Group.FACTOR_OP);
-            if (loop)
-                opers.add(lexer.obtain(Group.FACTOR_OP));
+            if (loop) {
+                opers.add(lexer.getToken() == Symbol.MULT ? "*" : "/");
+                lexer.nextToken();
+            }
         } while (loop);
         
         return new Term(factors, opers);
@@ -427,6 +463,7 @@ public class Compiler {
                 numIndex = parseNum(true);
             else
                 identIndex = lexer.obtain(Symbol.IDENT);
+            lexer.accept(Symbol.RIGHTBRACKET);
         } else if (lexer.accept(Symbol.LEFTPAR)) {
             isFunc = true;
             if (lexer.check(Group.OR_LIST))
@@ -439,16 +476,21 @@ public class Compiler {
     }
     private Num parseNum(boolean intOnly) {
         boolean isInt = lexer.checkIntValue();
-        int intValue = 0;
-        float floatValue = 0;
+        int intValue = 1;
+        float floatValue = 1;
         
         if (intOnly && !isInt)
             error.signal("Inteiro esperado");
         
+        if (lexer.accept(Symbol.MINUS)) {
+            intValue = -1;
+            floatValue = -1;
+        }
+        
         if (lexer.checkIntValue())
-            intValue = lexer.getIntValue();
+            intValue *= lexer.getIntValue();
         else
-            floatValue = lexer.getFloatValue();
+            floatValue *= lexer.getFloatValue();
         
         lexer.nextToken();
         
