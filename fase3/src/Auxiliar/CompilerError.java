@@ -3,9 +3,13 @@ package Auxiliar;
 import Lexer.*;
 
 public class CompilerError {
-    public CompilerError(Lexer lexer, String fileName) {       
-        this.lexer = lexer;           
+    public CompilerError(String fileName) {       
+        this.lexer = null;           
         this.fileName = fileName;
+    }
+    
+    public void setLexer(Lexer lexer) {
+        this.lexer = lexer;
     }
     
     public void signal(String strMessage) {
@@ -13,7 +17,7 @@ public class CompilerError {
         System.exit(0);
     }
     
-    private final Lexer lexer;
+    private Lexer lexer;
     private final String fileName;
 
 }

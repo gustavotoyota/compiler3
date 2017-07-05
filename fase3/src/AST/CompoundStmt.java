@@ -1,5 +1,4 @@
 package AST;
 
-public class CompoundStmt extends Stmt {
-    
+public abstract class CompoundStmt extends Stmt {        
 }

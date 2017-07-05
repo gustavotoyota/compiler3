@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Gustavo/Arquivos/UFSCar/Compiladores/Trabalho/Fase%203/fase3/src/AST/ExprStmt.java</file>
-            <file>file:/C:/Users/Gustavo/Arquivos/UFSCar/Compiladores/Trabalho/Fase%203/fase3/src/AST/OrTest.java</file>
-            <file>file:/C:/Users/Gustavo/Arquivos/UFSCar/Compiladores/Trabalho/Fase%203/fase3/src/AST/OrList.java</file>
-            <file>file:/C:/Users/Gustavo/Arquivos/UFSCar/Compiladores/Trabalho/Fase%203/fase3/src/AST/DeclGroup.java</file>
-            <file>file:/C:/Users/Gustavo/Arquivos/UFSCar/Compiladores/Trabalho/Fase%203/fase3/src/Compiler.java</file>
-            <file>file:/C:/Users/Gustavo/Arquivos/UFSCar/Compiladores/Trabalho/Fase%203/fase3/src/AST/Atom.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/Lexer/Lexer.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/Main.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/Auxiliar/CompilerError.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/Compiler.java</file>
         </group>
     </open-files>
 </project-private>

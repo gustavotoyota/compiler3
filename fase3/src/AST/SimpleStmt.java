@@ -1,5 +1,5 @@
 package AST;
 
-public class SimpleStmt extends Stmt {
+public abstract class SimpleStmt extends Stmt {
     
 }
