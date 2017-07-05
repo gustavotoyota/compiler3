@@ -1,0 +1,13 @@
+program erroLexico8:
+
+def main():void {
+	int a;
+	a = 7;
+
+	# Operador invalido
+	a += 2 - 1;
+
+	return ;
+}
+
+end

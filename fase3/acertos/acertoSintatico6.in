@@ -1,0 +1,38 @@
+program acertoSintatico6:
+
+# Testa o comando for
+
+def for1():void{
+	int var1;
+
+	for var1 inrange(5, 15) {
+		print var1, '\t';
+	}
+	print '\n';
+	return ;
+}
+
+def for2():void{
+	int var2;
+
+	for var2 inrange(10, 0) {
+
+		if var2 == 2 or var2 > 5 {
+			print var2, '\t';
+		}
+		if var2 <> 6 {
+			print 'Diferente de 6\t';
+		}
+	}
+	print '\n';
+	return ;
+}
+
+def main():void {
+	print 'Testing the for loop:\n';
+	for1();
+	for2();
+	return ;
+}
+
+end

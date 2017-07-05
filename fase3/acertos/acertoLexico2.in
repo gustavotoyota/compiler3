@@ -1,0 +1,8 @@
+program acertoLexico2:
+
+def main():void {
+	print 'Hello, world!\n'; # Testa posicao alternativa para comentario
+	return ;
+}# Testando tudo
+
+end # Testando tudo, tudo mesmo

@@ -1,0 +1,9 @@
+program erroSemantico32:
+
+def main():void {
+	# Contrucao proibida
+	’sou string’(1,2);
+	return ;
+}
+
+end

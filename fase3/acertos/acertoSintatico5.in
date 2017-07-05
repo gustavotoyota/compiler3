@@ -1,0 +1,27 @@
+program acertoSintatico5:
+
+# Testa o comando while
+
+def babiesValue(int p, int babies):int {
+	while babies <= 9 {
+	    print 'This generation has ' , babies , ' babies.\n';
+	    p = babies;
+	    babies = p + babies;
+
+	    if babies == 8 {
+	    	break;
+	    }
+	}
+	return babies;
+}
+
+def main():void {
+	int babies;
+
+	babies = babiesValue(1, 1);
+	print 'Final ', babies, '.\n';
+
+	return ;
+}
+
+end

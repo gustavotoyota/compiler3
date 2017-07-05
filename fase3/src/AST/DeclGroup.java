@@ -18,7 +18,7 @@ public class DeclGroup {
                 declType = "int";
                 break;
             case "string":
-                declType = "char*";
+                declType = "char";
                 break;
             case "float":
                 declType = "double";
@@ -30,6 +30,6 @@ public class DeclGroup {
         
         pw.indent();
         pw.print(declType + " ");
-        idList.genC(pw);
+        idList.genC(pw, declType);
     }
 }

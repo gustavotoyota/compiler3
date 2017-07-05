@@ -1,0 +1,10 @@
+program erroSemantico12:
+
+def main():void {
+	# Vetor com tamanho real
+	int value[10.213];
+	
+	return ;
+}
+
+end

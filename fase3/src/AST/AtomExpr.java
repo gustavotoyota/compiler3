@@ -13,6 +13,7 @@ public class AtomExpr {
     
     public void genC(PW pw) {
         atom.genC(pw);
-        details.genC(pw);
+        if (details != null)
+            details.genC(pw);
     }
 }

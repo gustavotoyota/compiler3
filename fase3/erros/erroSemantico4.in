@@ -1,0 +1,12 @@
+program erroSemantico4:
+
+def main():void {
+	int b;
+
+	# Atribuicao com tipo incorreto
+	b = 12.35;
+	
+	return ;
+}
+
+end

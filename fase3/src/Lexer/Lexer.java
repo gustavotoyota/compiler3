@@ -31,6 +31,9 @@ public class Lexer {
         keywordsTable.put("True", Symbol.TRUE);
         keywordsTable.put("while", Symbol.WHILE);
         keywordsTable.put("def", Symbol.DEF);
+        keywordsTable.put("def", Symbol.DEF);
+        keywordsTable.put("void", Symbol.VOID);
+        keywordsTable.put("return", Symbol.RETURN);
     }
     
     public Lexer(char[] input, CompilerError error) {

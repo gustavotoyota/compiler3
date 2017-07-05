@@ -1,0 +1,19 @@
+program erroSintatico10:
+
+def main():void {
+	int a, b, c, d[3], t;
+	a = 9;
+	b = 5;
+	c = 4;
+	d = [1,2,3];
+
+	# Falta operador 
+	t = a  b;
+	t = t * c / 2;
+	t = t + 2;
+
+	print 'sum =' , t;
+	return ;
+}
+
+end

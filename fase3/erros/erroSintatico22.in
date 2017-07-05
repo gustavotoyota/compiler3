@@ -1,0 +1,13 @@
+program erroSintatico22:
+
+# Falta nome do parametro
+def a(int ):int{
+	return 0;
+}
+
+def main():void {
+	
+	return ;
+}
+
+end

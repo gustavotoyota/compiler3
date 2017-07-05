@@ -1,0 +1,13 @@
+program erroSintatico17:
+
+# Falta o tipo da funcao
+def a():{
+	return 0;
+}
+
+def main():void {
+	
+	return ;
+}
+
+end

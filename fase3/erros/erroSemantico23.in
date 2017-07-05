@@ -1,0 +1,13 @@
+program erroSemantico23:
+
+# Funcao void deve ter retorno vazio
+def same():void{
+	return 2;
+}
+
+def main():void {
+	same();
+	return ;
+}
+
+end

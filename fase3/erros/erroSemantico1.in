@@ -1,0 +1,10 @@
+program erroSemantico1:
+
+def main():void {
+	# Uso de variavel nao declarada
+	a = 1;
+	
+	return ;
+}
+
+end

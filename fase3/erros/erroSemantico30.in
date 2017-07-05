@@ -1,0 +1,13 @@
+program erroSemantico30:
+
+def a(int x):int{
+	return 2;
+}
+
+def main():void {
+	# Chamada de metodo com numero incorreto de parametros
+	a(2,3);
+	return ;
+}
+
+end

@@ -1,0 +1,13 @@
+program erroSemantico11:
+
+def main():void {
+	string text;
+	text = 'My crazy test';
+
+	# Operador not aplicado a string
+	if not text {
+	}
+	return ;
+}
+
+end

@@ -1,0 +1,10 @@
+program erroLexico4:
+
+def main():void {
+	# Simbolo invalido
+	int abcd-efgh;
+	
+	return ;
+}
+
+end

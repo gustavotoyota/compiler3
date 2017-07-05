@@ -1,0 +1,10 @@
+program erroLexico1:
+
+def main():void {
+	# Palavra inexistente na linguagem
+	long x;
+	
+	return ;
+}
+
+end

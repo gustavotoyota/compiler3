@@ -1,0 +1,12 @@
+program acertoSintatico13:
+
+def vetPlay(int a):int{
+	return a;
+}
+
+def main():void {
+
+	print 'Final Value: ', vetPlay(17) * 5, '\n';
+	return ;
+}
+end

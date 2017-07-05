@@ -1,0 +1,13 @@
+program erroSintatico16:
+
+# Falta :
+def a()int{
+	return 0;
+}
+
+def main():void {
+	
+	return ;
+}
+
+end

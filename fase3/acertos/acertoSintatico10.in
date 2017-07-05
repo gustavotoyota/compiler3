@@ -1,0 +1,14 @@
+program acertoSintatico10:
+
+def main():void {
+	boolean a[3];
+	int x;
+
+	a = [True or False, True and False, not False];
+
+	for x inrange (2, -1){ # em c: for(x=2; x >-1; x--)
+		print a[x], '\t';
+	}
+	return ;
+}
+end

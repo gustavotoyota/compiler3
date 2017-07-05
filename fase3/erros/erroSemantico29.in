@@ -1,0 +1,13 @@
+program erroSemantico29:
+
+def a():int{
+	return 2;
+}
+
+def main():void {
+	# Chamada a metodo inexistente
+	aa();
+	return ;
+}
+
+end

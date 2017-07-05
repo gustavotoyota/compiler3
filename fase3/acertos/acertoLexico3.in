@@ -1,0 +1,16 @@
+# Testa se \t e espacos e enter são considerados como branco pelo analisador lexico 
+
+program acertoLexico3:
+
+def main():void {
+int a; float x;		string c, d;							a = 2;
+					x = 31.23456;
+         c = '!';d = 'Ola Mundo';
+
+
+
+
+
+print 'Hello, world', c;return ;}
+
+end

@@ -1,0 +1,15 @@
+program erroSemantico10:
+
+def main():void {
+	int num1;
+	int num2;
+
+	# Break fora de loop
+	if num1 > num2 {
+		break;
+	}
+
+	return ;
+}
+
+end

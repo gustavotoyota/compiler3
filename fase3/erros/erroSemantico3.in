@@ -1,0 +1,10 @@
+program erroSemantico3:
+
+def main():void {
+	# Vetor com tamanho negativo
+	string tamanho[-10];
+	
+	return ;
+}
+
+end

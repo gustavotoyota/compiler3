@@ -1,0 +1,13 @@
+program erroSintatico24:
+
+# Permitido somente um tipo de retorno
+def a():int float{
+	return 0;
+}
+
+def main():void {
+	
+	return ;
+}
+
+end

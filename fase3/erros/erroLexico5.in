@@ -1,0 +1,11 @@
+program erroLexico5:
+
+def main():void {
+	float a;
+
+	# Numero invalido
+	a = 1.o;
+	return ;
+}
+
+end

@@ -1,0 +1,11 @@
+program erroSemantico16:
+
+def main():void {
+	string b;
+
+	# Atribuicao com tipo incorreto
+	b = True;
+	return ;
+}
+
+end

@@ -1,0 +1,15 @@
+program erroSemantico24:
+
+def a():int{
+	return 2;
+}
+
+def main():void {
+	float x;
+
+	# Atribuicao entre tipos distintos
+	x = a();
+	return ;
+}
+
+end

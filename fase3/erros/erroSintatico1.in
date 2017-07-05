@@ -1,0 +1,10 @@
+program erroSintatico1:
+
+def main():void {
+	# Falta fechar aspas no print
+	print 'Hello, world!;
+	
+	return ;
+}
+
+end

@@ -1,0 +1,21 @@
+program erroSintatico7:
+
+def main():void {
+	int var1, guess, num;
+	string str1;
+	boolean achou;
+
+	var1 = 0;
+	guess = 0;
+	num = 59;
+	str1 = 'Henry';
+	achou = False;
+
+	# Falta operador de comparacao
+    if guess num {
+        print 'Your guess is too low.';
+    }
+
+	return ;
+}
+end

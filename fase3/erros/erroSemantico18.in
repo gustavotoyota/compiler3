@@ -1,0 +1,12 @@
+program erroSemantico18:
+
+def main():void {
+	int a;
+
+	# Atribuicao de tipo invalido
+	a = True or False;
+	
+	return ;
+}
+
+end

@@ -1,0 +1,14 @@
+program erroSintatico23:
+
+# Falta , entre parametros
+# Variavel com mesmo nome que metodo
+def a(int b int a):int{
+	return 0;
+}
+
+def main():void {
+	
+	return ;
+}
+
+end

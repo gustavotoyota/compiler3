@@ -1,0 +1,46 @@
+program erroSintatico15:
+
+def main():void {
+	int var1, guess, num;
+	string str1;
+	boolean achou;
+
+	var1 = 0;
+	guess = 0;
+	num = 59;
+	str1 = 'Henry';
+	achou = False;
+
+
+	print 'Well, ' , str1 , ', I am thinking of a n between 1 and 100.';
+
+	for var1 inrange(0, 50) {
+		
+	    if guess < num {
+	        print 'Your guess is too low.';
+	        guess = guess * 2;
+	    }
+
+	    else{
+		    if guess > num {
+		    	print 'Your guess is too high.';
+		    	guess = guess / 2;
+		    }
+
+		    else { # encontrou o numero
+		    	print 'Yes, I am thinking about ', guess;
+		    	achou = True;
+		    	break;
+		    
+	    }
+	}
+	# Falta um fecha chaves
+
+
+	if not achou {
+		print 'Nope. The number I was thinking of was ' , num;
+	}
+
+	return ;
+}
+end

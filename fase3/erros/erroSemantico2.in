@@ -1,0 +1,10 @@
+program erroSemantico2:
+
+def main():void {
+	# Redeclaracao de variavel
+	int a, a[10];
+	
+	return ;
+}
+
+end

@@ -14,7 +14,8 @@ public class Body {
     }
     
     public void genC(PW pw) {
-        declaration.genC(pw);
+        if (declaration != null)
+            declaration.genC(pw);
         for (int i = 0; i < stmts.size(); ++i)
             stmts.get(i).genC(pw);
     }

@@ -1,0 +1,12 @@
+program acertoSintatico9:
+
+def main():void {
+	boolean true;
+
+	true = True or False and False;
+	true = not true;
+
+	print true, '\n';
+	return ;
+}
+end

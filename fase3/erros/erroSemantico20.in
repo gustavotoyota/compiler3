@@ -1,0 +1,11 @@
+program erroSemantico20:
+
+def main():void {
+	boolean a;
+
+	# operador aritmetico aplicado a tipo booleano
+	a = True + False;
+	return ;
+}
+
+end

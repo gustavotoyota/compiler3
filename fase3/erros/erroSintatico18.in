@@ -1,0 +1,13 @@
+program erroSintatico18:
+
+# Falta o nome da funcao
+def ():int{
+	return 0;
+}
+
+def main():void {
+	
+	return ;
+}
+
+end

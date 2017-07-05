@@ -1,0 +1,8 @@
+program acertoSintatico1:
+
+def main():void {
+	print 'Hello, world!\n';
+	return ;
+}
+
+end

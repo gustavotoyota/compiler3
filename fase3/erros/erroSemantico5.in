@@ -1,0 +1,12 @@
+program erroSemantico5:
+
+def main():void {
+	int var;
+	int vet[10];
+
+	# Atribuicao de tipos incompativeis
+	var = vet;
+	return ;
+}
+
+end

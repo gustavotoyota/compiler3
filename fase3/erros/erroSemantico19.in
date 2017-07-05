@@ -1,0 +1,13 @@
+program erroSemantico19:
+
+def main():void {
+	# variavel a redeclarada mas nao em sequencia
+	int a;
+	float b;
+	boolean c;
+	int a;
+	
+	return ;
+}
+
+end

@@ -1,0 +1,13 @@
+program erroSintatico21:
+
+def a():int{
+	return 0;
+}
+
+def main():void {
+	# Chamada invalida de funcao
+	a;
+	return ;
+}
+
+end

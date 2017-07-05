@@ -1,0 +1,21 @@
+program acertoSintatico2:
+
+def aValue():int {
+	return 2;
+}
+
+def main():void {
+	int a;
+	float x;
+	string c, d;
+
+	a = aValue();
+	x = 31.23456;
+	c = '!';
+	d = 'Ola Mundo';
+
+	print 'Hello, world', c, '\n';
+	return ;
+}
+
+end

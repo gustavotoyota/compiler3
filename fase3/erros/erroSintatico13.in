@@ -1,0 +1,22 @@
+program erroSintatico13:
+
+def main():void {
+	# Testa o comando while
+
+	int p, babies;
+	p = 1;
+	babies = 1;
+
+	while babies <= 9 {
+	    print 'This generation has ' , babies , ' babies';
+	    p = babies;
+	    babies = p + babies;
+
+	    # else sem if
+	    else {
+	    	break;
+	    }
+	}
+	return ;
+}
+end

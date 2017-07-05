@@ -1,0 +1,9 @@
+program erroSemantico31:
+
+# Metodo main nao pode ser boolean
+def main():boolean {
+	
+	return True;
+}
+
+end

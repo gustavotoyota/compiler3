@@ -1,0 +1,24 @@
+program erroSintatico14:
+
+def main():void {
+	# Testa o comando for
+
+	int var1, var2;
+
+	print 'Testing the for loop';
+
+	for var1 inrange(5, 15) {
+		print var1;
+	}
+
+	for var2 inrange(10, 0) {
+
+		# Falta comparador
+		if var2 == 2 var2 > 5 {
+			print var2;
+		}
+	}
+	return ;
+}
+
+end

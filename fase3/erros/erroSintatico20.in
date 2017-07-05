@@ -1,0 +1,13 @@
+program erroSintatico20:
+
+# Retorno invalido
+def a():int{
+	return 0,1,2;
+}
+
+def main():void {
+	
+	return ;
+}
+
+end

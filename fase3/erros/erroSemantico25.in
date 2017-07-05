@@ -1,0 +1,19 @@
+program erroSemantico25:
+
+def a():int{
+	return 2;
+}
+
+def b():float{
+	return 2.1;
+}
+
+def main():void {
+	float x;
+
+	# Operacao entre tipos distintos
+	x = a() + b();
+	return ;
+}
+
+end

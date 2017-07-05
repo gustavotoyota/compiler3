@@ -1,0 +1,22 @@
+program erroSintatico5:
+
+def main():void {
+	# Testa o comando while
+
+	int p, babies;
+	p = 1;
+	babies = 1;
+
+	# Falta valor depois de <=
+	while babies <=  {
+	    print 'This generation has ' , babies , ' babies';
+	    p = babies;
+	    babies = p + babies;
+
+	    if babies == 8 {
+	    	break;
+	    }
+	}
+	return ;
+}
+end

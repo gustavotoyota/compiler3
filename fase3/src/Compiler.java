@@ -73,8 +73,7 @@ public class Compiler {
         
         do {
             String type = lexer.obtain(Group.TYPE);
-            NameArray nameArray = parseNameArray();
-            
+            NameArray nameArray = parseNameArray();            
             arguments.add(new Argument(type, nameArray));
         } while (lexer.accept(Symbol.COMMA));
         
@@ -110,8 +109,14 @@ public class Compiler {
             String type = lexer.obtain(Group.TYPE);
             
             IdList idList = parseIdList();
-            
+            if (idList != null && idList.nameArrays != null) {
+                for (int i = 0; i < idList.nameArrays.size(); ++i)
+                    if (SymbolTable.symbolTable.put(idList.nameArrays.get(i).name, new Variable(type, idList.nameArrays.get(i).length)) != null)
+                        error.signal("Variável " + idList.nameArrays.get(i).name + " já declarada");
+            }
             declGroups.add(new DeclGroup(type, idList));
+            
+            lexer.accept(Symbol.SEMICOLON);
         } while (lexer.check(Group.TYPE));
         
         return new Declaration(declGroups);
@@ -145,7 +150,7 @@ public class Compiler {
         else if (lexer.check(Symbol.BREAK))
             return parseBreakStmt();
         else if (lexer.check(Symbol.RETURN))
-            return parseReturnStmt();
+            return parseReturnStmt();                    
         error.signal("Statement simples esperado");
         return null;
     }
@@ -166,7 +171,7 @@ public class Compiler {
             lexer.expect(Symbol.RIGHTBRACKET);
         }
         
-        lexer.expect(Symbol.EQ);         
+        lexer.expect(Symbol.ASSIGN);         
         
         Boolean isList;
         AST.OrTest value = null;
@@ -190,6 +195,8 @@ public class Compiler {
             values.add(parseOrTest());
         } while (lexer.accept(Symbol.COMMA));
         
+        lexer.accept(Symbol.SEMICOLON);
+        
         return new PrintStmt(values);
     }
     private SimpleStmt parseBreakStmt() {
@@ -205,7 +212,7 @@ public class Compiler {
         if (lexer.check(Group.OR_TEST))
             value = parseOrTest();
         
-        lexer.expect(Symbol.SEMICOLON);
+        lexer.expect(Symbol.SEMICOLON);                                
         
         return new ReturnStmt(value);
     }
@@ -289,20 +296,19 @@ public class Compiler {
         return new ForStmt(iter, begin, end, stmts);
     }
     private Atom parseAtom() {
-        Symbol type = lexer.getToken();
-        
-        String name = "";
+        Symbol type = lexer.getToken();        
+        String name = "";        
         Num number = null;
         String string = "";
         
         switch (type) {
         case IDENT:
-            name = lexer.obtain(Symbol.IDENT);
+            name = lexer.obtain(Symbol.IDENT);           
             break;
         case NUMBER:
             number = parseNum(false);
             break;
-        case STRING:
+        case STRINGLIT:
             string = lexer.obtain(Symbol.STRINGLIT);
             break;
         }
@@ -352,7 +358,8 @@ public class Compiler {
             exprs.add(parseExpr());
             
             loop = lexer.check(Group.COMP_OP);
-            opers.add(lexer.obtain(Group.COMP_OP));
+            if (loop)
+                opers.add(lexer.obtain(Group.COMP_OP));
         } while (loop);
         
         return new Comp(exprs, opers);
@@ -366,7 +373,8 @@ public class Compiler {
             terms.add(parseTerm());
             
             loop = lexer.check(Group.TERM_OP);
-            opers.add(lexer.obtain(Group.TERM_OP));
+            if (loop)
+                opers.add(lexer.obtain(Group.TERM_OP));
         } while (loop);
         
         return new Expr(terms, opers);
@@ -380,7 +388,8 @@ public class Compiler {
             factors.add(parseFactor());
             
             loop = lexer.check(Group.FACTOR_OP);
-            opers.add(lexer.obtain(Group.FACTOR_OP));
+            if (loop)
+                opers.add(lexer.obtain(Group.FACTOR_OP));
         } while (loop);
         
         return new Term(factors, opers);
@@ -422,6 +431,7 @@ public class Compiler {
             isFunc = true;
             if (lexer.check(Group.OR_LIST))
                 orList = parseOrList();
+            lexer.accept(Symbol.RIGHTPAR);
         } else
             error.signal("Detalhes de átomo esperados");
         

@@ -1,0 +1,15 @@
+program erroLexico9:
+
+def main():void {
+	int a, b;
+	a = 7;
+	b = 4;
+
+	# Operador invalido
+	if a <<= b{
+	}
+	return ;
+}
+
+
+end

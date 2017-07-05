@@ -34,8 +34,8 @@ public class FuncDef {
         
         pw.indent();
         pw.print(funcType + " " + name + "(");
-        argsList.genC(pw);
-        pw.indent();
+        if (argsList != null)
+            argsList.genC(pw);        
         pw.println(") {");
         pw.increment();
         body.genC(pw);

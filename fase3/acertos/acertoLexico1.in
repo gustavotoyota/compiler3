@@ -1,0 +1,9 @@
+	# Testa se o lexico aceita tab na primeira posicao do arquivo.
+program acertoLexico1:
+
+def main():void {
+	print 'Hello, world!\n';
+	return ;
+}
+
+end

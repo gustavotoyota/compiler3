@@ -13,7 +13,7 @@ public class NameArray {
     
     public void genC(PW pw) {
         pw.print(name);
-        if (length.intValue > 0)
+        if (length != null && length.intValue > 0)
             pw.print("[" + Integer.toString(length.intValue) + "]");
     }
 }

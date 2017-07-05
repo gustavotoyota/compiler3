@@ -1,0 +1,13 @@
+program erroSemantico21:
+
+# Erro de tipos
+def a():int{
+	return 13.2;
+}
+
+def main():void {
+	a();
+	return ;
+}
+
+end

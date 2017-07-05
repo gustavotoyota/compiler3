@@ -1,0 +1,10 @@
+program erroSemantico9:
+
+def main():void {
+	# Emprego de palavra reservada
+	string int;
+	
+	return ;
+}
+
+end

@@ -1,0 +1,17 @@
+program erroSemantico22:
+
+# Funcoes com mesmo nome
+def same():int{
+	return 2;
+}
+
+def same():void{
+	return ;
+}
+
+def main():void {
+	same();
+	return ;
+}
+
+end

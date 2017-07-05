@@ -1,0 +1,8 @@
+program erroSemantico28:
+
+# Funcao main ausente
+def a():boolean{
+	return True and not False;
+}
+
+end

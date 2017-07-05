@@ -1,0 +1,10 @@
+program erroLexico2:
+
+def main():void {
+	# Numero fora dos limites
+	print 1000000000000000000;
+
+	return ;
+}
+
+end

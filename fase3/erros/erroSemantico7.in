@@ -1,0 +1,11 @@
+program erroSemantico7:
+
+def main():void {
+	int numero;
+
+	# Variavel nao declarada (linguagem case sensitive)
+	Numero = 21;
+	return ;
+}
+
+end

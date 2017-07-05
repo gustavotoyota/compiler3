@@ -1,0 +1,13 @@
+# Testa se o lexico considera validos identificadores com mais de 32 caracteres
+
+program acertoLexico4:
+
+def main():void {
+	int i01234567890123456789012345678901234567890123;
+
+	int abcdefghijklmnopqrstuvxwyzabcdeabcdefghijklmnopqrstuvxwy;
+
+	return ;
+}
+
+end

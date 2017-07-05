@@ -1,0 +1,22 @@
+program erroSemantico26:
+
+def a(int x1, string x2):int{
+	return 2;
+}
+
+def b():float{
+	return 2.1;
+}
+
+def main():void {
+	int x1, x;
+	string x2;
+	x1 = 2;
+	x2 = 'Fun forever';
+
+	# Erro entre tipos, funcao espera int, string, mas recebe string, int
+	x = a(x2, x1);
+	return ;
+}
+
+end

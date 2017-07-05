@@ -1,0 +1,12 @@
+program erroLexico6:
+
+def main():void {
+	int a;
+
+	# Numero fora dos limites
+	a = 7000000000000000000;
+
+	return ;
+}
+
+end

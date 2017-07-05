@@ -1,6 +1,7 @@
 package AST;
 
 import Auxiliar.PW;
+import Auxiliar.SymbolTable;
 
 public class ExprStmt extends SimpleStmt {
     public final String name;
@@ -19,20 +20,31 @@ public class ExprStmt extends SimpleStmt {
     
     @Override
     public void genC(PW pw) {
-        pw.indent();
+        boolean isString = "string".equals(SymbolTable.symbolTable.get(name).type);
+        
+        pw.indent(); 
+        if (isString)
+            pw.print("strcpy(");
         pw.print(name);
         if (index != null) {
             pw.print("[");
             index.genC(pw);
             pw.print("]");
         }
-        pw.print(" = ");
+        if (isString)
+            pw.print(", ");
+        else
+            pw.print(" = ");
+        
         if (isList) {
             pw.print("[");
             list.genC(pw);
             pw.print("]");
         } else
-            value.genC(pw);        
+            value.genC(pw); 
+        
+        if (isString)
+            pw.print(")");
         pw.println(";");
     }
 }
