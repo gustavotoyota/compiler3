@@ -2,7 +2,7 @@ package Lexer;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+import java.util.ArrayList;
 
 public enum Group {
     TYPE("Tipo"),
@@ -25,9 +25,10 @@ public enum Group {
     public static final HashMap<Group, Symbol[]> groups = new HashMap<>(); 
     
     public static Symbol[] concat(Symbol[] a, Symbol[] b) {
-        List<Symbol> result = Arrays.asList(a);
+        ArrayList<Symbol> result = new ArrayList<>();
+        result.addAll(Arrays.asList(a));
         result.addAll(Arrays.asList(b));
-        return (Symbol [])result.toArray();
+        return result.toArray(new Symbol[a.length + b.length]);
     }
     
     static {
