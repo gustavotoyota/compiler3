@@ -15,7 +15,8 @@ import AST.*;
 
 public class Compiler {
     public Program compile(char []input, String fileName) {
-        SymbolTable.globalTable = new HashMap<>();        
+        SymbolTable.globalTable = new HashMap<>();   
+        SymbolTable.returnTypeTable = new HashMap<>();
         SymbolTable.localTable = new HashMap<>();
         error = new CompilerError(fileName);
         lexer = new Lexer(input, error);
@@ -68,6 +69,7 @@ public class Compiler {
         lexer.expect(Symbol.RIGHTBRACE);
                 
         SymbolTable.globalTable.put(name, (HashMap)SymbolTable.localTable.clone());
+        SymbolTable.returnTypeTable.put(name, type);
         SymbolTable.localTable.clear();
         
         return new FuncDef(name, argsList, type, body);

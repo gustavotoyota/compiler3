@@ -21,7 +21,13 @@ public class PrintStmt extends SimpleStmt {
             atom = values.get(i).andTests.get(0).notTests.get(0).comp.exprs.get(0).terms.get(0).factors.get(0).atomExpr.atom;
             switch(atom.type) {
             case IDENT:
-                switch(SymbolTable.localTable.get(atom.name).type) {
+                String type = "";
+                if (SymbolTable.localTable.containsKey(atom.name))
+                    type = SymbolTable.localTable.get(atom.name).type;
+                else
+                    type = SymbolTable.returnTypeTable.get(atom.name);
+                
+                switch(type) {
                     case "int":
                         pw.print("%d");
                         break;

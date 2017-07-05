@@ -74,7 +74,8 @@ public class Lexer {
             if (value == null)
                 token = Symbol.IDENT;
             else 
-                token = value;                
+                token = value;  
+            isIntValue = false;
         } else if (Character.isDigit(input[tokenPos])) {                
             String s = "";
             

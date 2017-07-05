@@ -1,6 +1,8 @@
 package AST;
 
 import Auxiliar.PW;
+import Auxiliar.SymbolTable;
+import Lexer.Symbol;
 import java.util.ArrayList;
 
 public class Comp {
@@ -13,10 +15,47 @@ public class Comp {
     }
     
     public void genC(PW pw) {
-        for (int i = 0; i < exprs.size(); ++i) {
-            exprs.get(i).genC(pw);
-            if (i < exprs.size() - 1)
-                pw.print(" " + opers.get(i) + " ");
-        }
+        Atom atom = exprs.get(0).terms.get(0).factors.get(0).atomExpr.atom;
+        if (opers.isEmpty())
+            exprs.get(0).genC(pw);
+        else {
+            if (atom.type == Symbol.STRINGLIT || 
+                (SymbolTable.localTable.containsKey(atom.name) && "string".equals(SymbolTable.localTable.get(atom.name).type)) ||
+                (SymbolTable.returnTypeTable.containsKey(atom.name) && "string".equals(SymbolTable.returnTypeTable.get(atom.name)))) {
+
+                pw.print("strcmp(");
+                exprs.get(0).genC(pw);
+                pw.print(", ");
+                exprs.get(1).genC(pw);
+                pw.print(")");
+                    
+                switch (opers.get(0)) {
+                    case "==":
+                        pw.print(" == 0 ");
+                        break;
+                    case "!=":
+                        pw.print(" != 0 ");
+                        break;
+                    case "<":
+                        pw.print(" < 0 ");
+                        break;
+                    case "<=":
+                        pw.print(" <= 0 ");
+                        break;
+                    case ">":
+                        pw.print(" > 0 ");
+                        break;
+                    case ">=":
+                        pw.print(" >= 0 ");
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                exprs.get(0).genC(pw);
+                pw.print(" " + opers.get(0) + " ");
+                exprs.get(1).genC(pw);
+            }
+        }        
     }
 }
