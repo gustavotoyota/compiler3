@@ -17,11 +17,11 @@ import java.util.ArrayList;
  */
 public class ForStmt extends CompoundStmt {
     public final String iter;
-    public final int begin;
-    public final int end;
+    public final Num begin;
+    public final Num end;
     public final ArrayList<Stmt> stmts;
 
-    public ForStmt(String iter, int begin, int end, ArrayList<Stmt> stmts) {
+    public ForStmt(String iter, Num begin, Num end, ArrayList<Stmt> stmts) {
         this.iter = iter;
         this.begin = begin;
         this.end = end;

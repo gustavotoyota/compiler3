@@ -1,3 +1,4 @@
+import AST.Num;
 import AST.IdList;
 import AST.Details;
 import AST.AtomExpr;
@@ -29,7 +30,7 @@ public class Compiler {
     private Program parseProgram() {
         lexer.expect(Symbol.PROGRAM);
         
-        String name = lexer.obtainString(Symbol.IDENT);
+        String name = lexer.obtain(Symbol.IDENT);
         
         lexer.expect(Symbol.COLON);
         
@@ -45,7 +46,7 @@ public class Compiler {
     private FuncDef parseFuncDef() {
         lexer.expect(Symbol.DEF);
         
-        String name = lexer.obtainString(Symbol.IDENT);
+        String name = lexer.obtain(Symbol.IDENT);
         
         lexer.expect(Symbol.LEFTPAR);
         
@@ -56,7 +57,7 @@ public class Compiler {
         lexer.expect(Symbol.RIGHTPAR);
         lexer.expect(Symbol.COLON);
         
-        String type = lexer.obtainString(Group.TYPE);
+        String type = lexer.obtain(Group.TYPE);
         
         lexer.expect(Symbol.LEFTBRACE);
         
@@ -70,7 +71,7 @@ public class Compiler {
         ArrayList<Argument> arguments = new ArrayList<>();
         
         do {
-            String type = lexer.obtainString(Group.TYPE);
+            String type = lexer.obtain(Group.TYPE);
             NameArray nameArray = parseNameArray();
             
             arguments.add(new Argument(type, nameArray));
@@ -79,11 +80,11 @@ public class Compiler {
         return new ArgsList(arguments);
     }
     private NameArray parseNameArray() {
-        String name = lexer.obtainString(Symbol.IDENT);
+        String name = lexer.obtain(Symbol.IDENT);
         
-        Integer length = 0;
+        Num length = null;
         if (lexer.accept(Symbol.LEFTBRACKET)) {
-            length = lexer.obtainInt();
+            length = parseNum(true);
             
             lexer.expect(Symbol.RIGHTBRACKET);
         }
@@ -105,7 +106,7 @@ public class Compiler {
         ArrayList<AST.DeclGroup> declGroups = new ArrayList<>();
         
         do {
-            String type = lexer.obtainString(Group.TYPE);
+            String type = lexer.obtain(Group.TYPE);
             
             IdList idList = parseIdList();
             
@@ -133,7 +134,7 @@ public class Compiler {
     }
     private SimpleStmt parseSimpleStmt() {
         if (lexer.check(Symbol.IDENT)) {
-            String name = lexer.obtainString(Symbol.IDENT);
+            String name = lexer.obtain(Symbol.IDENT);
             if (lexer.check(Symbol.LEFTPAR))
                 return parseFuncStmt(name);
             else
@@ -262,17 +263,17 @@ public class Compiler {
     private CompoundStmt parseForStmt() {
         lexer.expect(Symbol.FOR);
         
-        String iter = lexer.obtainString(Symbol.IDENT);
+        String iter = lexer.obtain(Symbol.IDENT);
         
         lexer.expect(Symbol.INRANGE);
         
         lexer.expect(Symbol.LEFTPAR);
         
-        int begin = lexer.obtainInt();
+        Num begin = parseNum(true);
         
         lexer.expect(Symbol.COMMA);
         
-        int end = lexer.obtainInt();
+        Num end = parseNum(true);
         
         lexer.expect(Symbol.RIGHTPAR);
         
@@ -287,7 +288,25 @@ public class Compiler {
         return new ForStmt(iter, begin, end, stmts);
     }
     private Atom parseAtom() {
-        return null;
+        Symbol type = lexer.getToken();
+        
+        String name = "";
+        Num number = null;
+        String string = "";
+        
+        switch (type) {
+        case IDENT:
+            name = lexer.obtain(Symbol.IDENT);
+            break;
+        case NUMBER:
+            number = parseNum(false);
+            break;
+        case STRING:
+            string = lexer.obtain(Symbol.STRINGLIT);
+            break;
+        }
+        
+        return new Atom(type, name, number, string);
     }
     private OrList parseOrList() {
         ArrayList<OrTest> orTests = new ArrayList<>();
@@ -332,7 +351,7 @@ public class Compiler {
             exprs.add(parseExpr());
             
             loop = lexer.check(Group.COMP_OP);
-            opers.add(lexer.obtainString(Group.COMP_OP));
+            opers.add(lexer.obtain(Group.COMP_OP));
         } while (loop);
         
         return new Comp(exprs, opers);
@@ -346,7 +365,7 @@ public class Compiler {
             terms.add(parseTerm());
             
             loop = lexer.check(Group.TERM_OP);
-            opers.add(lexer.obtainString(Group.TERM_OP));
+            opers.add(lexer.obtain(Group.TERM_OP));
         } while (loop);
         
         return new Expr(terms, opers);
@@ -360,7 +379,7 @@ public class Compiler {
             factors.add(parseFactor());
             
             loop = lexer.check(Group.FACTOR_OP);
-            opers.add(lexer.obtainString(Group.FACTOR_OP));
+            opers.add(lexer.obtain(Group.FACTOR_OP));
         } while (loop);
         
         return new Term(factors, opers);
@@ -368,7 +387,7 @@ public class Compiler {
     private Factor parseFactor() {
         String signal = "";
         if (lexer.check(Group.SIGNAL))
-            signal = lexer.obtainString(Group.SIGNAL);
+            signal = lexer.obtain(Group.SIGNAL);
         
         AtomExpr atomExpr = parseAtomExpr();
         
@@ -390,14 +409,14 @@ public class Compiler {
         boolean isFunc = false;
         boolean isInt = false;
         OrList orList = null;
-        int intValue = 0;
-        String stringValue = "";
+        Num numIndex = null;
+        String identIndex = "";
         if (lexer.accept(Symbol.LEFTBRACKET)) {
             isInt = lexer.checkIntValue();
             if (isInt)
-                intValue = lexer.obtainInt();
+                numIndex = parseNum(true);
             else
-                stringValue = lexer.obtainString(Symbol.IDENT);
+                identIndex = lexer.obtain(Symbol.IDENT);
         } else if (lexer.accept(Symbol.LEFTPAR)) {
             isFunc = true;
             if (lexer.check(Group.OR_LIST))
@@ -405,6 +424,23 @@ public class Compiler {
         } else
             error.signal("Detalhes de átomo esperados");
         
-        return new Details(isFunc, orList, isInt, intValue, stringValue);
+        return new Details(isFunc, orList, isInt, numIndex, identIndex);
+    }
+    private Num parseNum(boolean intOnly) {
+        boolean isInt = lexer.checkIntValue();
+        int intValue = 0;
+        float floatValue = 0;
+        
+        if (intOnly && !isInt)
+            error.signal("Inteiro esperado");
+        
+        if (lexer.checkIntValue())
+            intValue = lexer.getIntValue();
+        else
+            floatValue = lexer.getFloatValue();
+        
+        lexer.nextToken();
+        
+        return new Num(isInt, intValue, floatValue);
     }
 }

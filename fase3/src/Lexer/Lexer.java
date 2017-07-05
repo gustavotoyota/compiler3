@@ -196,7 +196,7 @@ public class Lexer {
         }
         return true;
     }
-    public String obtainString(Symbol symbol) {
+    public String obtain(Symbol symbol) {
         String aux = stringValue;
         expect(symbol);
         return aux;
@@ -225,17 +225,9 @@ public class Lexer {
         }
         return true;
     }
-    public String obtainString(Group group) {
+    public String obtain(Group group) {
         String aux = stringValue;
         expect(group);
-        return aux;
-    }
-    
-    public Integer obtainInt() {
-        if (!isIntValue)
-            error.signal("Inteiro esperado");
-        Integer aux = intValue;
-        expect(Symbol.NUMBER);
         return aux;
     }
     

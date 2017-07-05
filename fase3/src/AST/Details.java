@@ -14,14 +14,14 @@ public class Details {
     public final boolean isFunc;
     public final OrList orList;
     public final boolean isInt;
-    public final int intValue;
-    public final String stringValue;
+    public final Num numIndex;
+    public final String identIndex;
 
-    public Details(boolean isFunc, OrList orList, boolean isInt, int intValue, String stringValue) {
+    public Details(boolean isFunc, OrList orList, boolean isInt, Num numIndex, String identIndex) {
         this.isFunc = isFunc;
         this.orList = orList;
         this.isInt = isInt;
-        this.intValue = intValue;
-        this.stringValue = stringValue;
+        this.numIndex = numIndex;
+        this.identIndex = identIndex;
     }
 }
