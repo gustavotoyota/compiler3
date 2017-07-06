@@ -19,6 +19,7 @@ public class Compiler {
     public Program compile(char []input, String fileName) {
         SymbolTable.globalTable = new HashMap<>();   
         SymbolTable.returnTypeTable = new HashMap<>();
+        SymbolTable.paramsCountTable = new HashMap<>();
         SymbolTable.localTable = new HashMap<>();
         error = new CompilerError(fileName);
         lexer = new Lexer(input, error);
@@ -44,14 +45,29 @@ public class Compiler {
             funcDefs.add(parseFuncDef());
         } while (lexer.check(Symbol.DEF));
         
+        /* ERRO SEMANTICO 28
+        !!!!!!!!!!!!!!!!!
+        !!!!!!!!!!!!!!!!!
+        */
+        if (!SymbolTable.globalTable.containsKey("main"))
+            error.signal("Função main ausente");
+        
         lexer.expect(Symbol.END);
         
         return new Program(name, funcDefs);
     }
+    
     private FuncDef parseFuncDef() {
         lexer.expect(Symbol.DEF);
         
         String name = lexer.obtain(Symbol.IDENT);
+        
+        /* ERRO SEMANTICO 22
+        !!!!!!!!!!!!!!!!!!
+        !!!!!!!!!!!!!!!!!!
+        */
+        if (SymbolTable.globalTable.containsKey(name))
+            error.signal("Função " + name + " já declarada");               
         
         lexer.expect(Symbol.LEFTPAR);
         
@@ -64,14 +80,23 @@ public class Compiler {
         
         String type = lexer.obtain(Group.TYPE);
         
+        SymbolTable.returnTypeTable.put(name, type);
+        
+        /* ERRO SEMANTICO 31
+        !!!!!!!!!!!!!!!!!!!
+        !!!!!!!!!!!!!!!!!!
+        */
+        if ("main".equals(name) && !"void".equals(type))
+            error.signal("Função main deve ser do tipo void");
+        
         lexer.expect(Symbol.LEFTBRACE);
         
         Body body = parseBody();                
         
         lexer.expect(Symbol.RIGHTBRACE);
                 
-        SymbolTable.globalTable.put(name, (HashMap)SymbolTable.localTable.clone());
-        SymbolTable.returnTypeTable.put(name, type);
+        SymbolTable.globalTable.put(name, (HashMap)SymbolTable.localTable.clone()); 
+        SymbolTable.paramsCountTable.put(name, argsList == null ? 0 : argsList.arguments.size());        
         SymbolTable.localTable.clear();
         
         return new FuncDef(name, argsList, type, body);
@@ -119,9 +144,17 @@ public class Compiler {
             
             IdList idList = parseIdList();
             if (idList != null && idList.nameArrays != null) {
-                for (int i = 0; i < idList.nameArrays.size(); ++i)
-                    if (SymbolTable.localTable.put(idList.nameArrays.get(i).name, new Variable(type, idList.nameArrays.get(i).length)) != null)
+                for (int i = 0; i < idList.nameArrays.size(); ++i) {
+                    /* ERRO SEMANTICO 27
+                    !!!!!!!!!!!!!!!!!!!!!!
+                    !!!!!!!!!!!!!!!!!!!!!!
+                    */
+                    if (SymbolTable.returnTypeTable.containsKey(idList.nameArrays.get(i).name) &&
+                            !SymbolTable.globalTable.containsKey(idList.nameArrays.get(i).name))
+                        error.signal("Variável " + idList.nameArrays.get(i).name + " com mesmo nome de função");
+                    if (SymbolTable.localTable.put(idList.nameArrays.get(i).name, new Variable(type, idList.nameArrays.get(i).length)) != null)                            
                         error.signal("Variável " + idList.nameArrays.get(i).name + " já declarada");
+                }
             }
             declGroups.add(new DeclGroup(type, idList));
             
@@ -191,13 +224,19 @@ public class Compiler {
         }
         
         lexer.expect(Symbol.ASSIGN);         
-        
+                       
         Boolean isList;
         AST.OrTest value = null;
         AST.OrList list = null;
         if (isList = lexer.accept(Symbol.LEFTBRACKET)) {
             list = parseOrList();
             lexer.expect(Symbol.RIGHTBRACKET);
+             /* ERRO SEMANTICO 13
+            !!!!!!!!!!!!!!!!!!!!!!!!
+            !!!!!!!!!!!!!!!!!!!!!!!!
+            */
+            if (list.orTests.size() != SymbolTable.localTable.get(name).length.intValue)
+                error.signal("Array com excesso de elementos");
         } else
             value = parseOrTest();
         
@@ -245,6 +284,13 @@ public class Compiler {
         OrList param = null;
         if (lexer.check(Group.OR_LIST))
             param = parseOrList();
+        
+        /* ERRO SEMANTICO 30
+        !!!!!!!!!!!!!!!!
+        !!!!!!!!!!!!!!!!
+        */
+        if ((param == null ? 0 : param.orTests.size()) != SymbolTable.paramsCountTable.get(name))
+            error.signal("Chamada de função com número incorreto de parâmetros");
         
         lexer.expect(Symbol.RIGHTPAR);
         lexer.expect(Symbol.SEMICOLON);
@@ -342,8 +388,19 @@ public class Compiler {
             case STRINGLIT:
                 string = lexer.obtain(Symbol.STRINGLIT);
                 break;
-            default:
+            case TRUE:
                 lexer.nextToken();
+                break;
+            case FALSE: 
+                lexer.nextToken();
+                break;
+            default:
+                /* ERRO SINTATICO 12
+                !!!!!!!!!!!!!
+                !!!!!!!!!!!!!
+                */
+                error.signal("Valor faltando");
+                break;
         }
         
         return new Atom(type, name, number, string);
@@ -472,8 +529,18 @@ public class Compiler {
     private AtomExpr parseAtomExpr() {
         Atom atom = parseAtom();
         Details details = null;
-        if (lexer.check(Group.DETAILS))
+        if (lexer.check(Group.DETAILS)) {         
             details = parseDetails();
+            /* ERRO SEMANTICO 14
+            !!!!!!!!!!!!!!!!!!!
+            !!!!!!!!!!!!!!!!!!!
+            */
+            if (details.isInt && (details.numIndex.intValue < 0 ||
+                    details.numIndex.intValue >= SymbolTable.localTable.get(atom.name).length.intValue))
+                error.signal("Acesso de posição inválida no array");
+            else if (details.isFunc && (details.orList.orTests.size() != SymbolTable.paramsCountTable.get(atom.name)))
+                error.signal("Chamada de função com parâmetros incorretos");
+        }
         
         return new AtomExpr(atom, details);
     }
@@ -494,7 +561,7 @@ public class Compiler {
             isFunc = true;
             if (lexer.check(Group.OR_LIST))
                 orList = parseOrList();
-            lexer.accept(Symbol.RIGHTPAR);
+            lexer.accept(Symbol.RIGHTPAR);            
         } else
             error.signal("Detalhes de átomo esperados");
         
