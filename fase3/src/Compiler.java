@@ -14,6 +14,8 @@ import Lexer.*;
 import AST.*;
 
 public class Compiler {
+    private int loopCount = 0;
+    
     public Program compile(char []input, String fileName) {
         SymbolTable.globalTable = new HashMap<>();   
         SymbolTable.returnTypeTable = new HashMap<>();
@@ -123,7 +125,7 @@ public class Compiler {
             }
             declGroups.add(new DeclGroup(type, idList));
             
-            lexer.accept(Symbol.SEMICOLON);
+            lexer.expect(Symbol.SEMICOLON);
         } while (lexer.check(Group.TYPE));
         
         return new Declaration(declGroups);
@@ -148,10 +150,20 @@ public class Compiler {
     private SimpleStmt parseSimpleStmt() {
         if (lexer.check(Symbol.IDENT)) {
             String name = lexer.obtain(Symbol.IDENT);
-            if (lexer.check(Symbol.LEFTPAR))
+            /* ERROSEMANTICO1
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            */            
+            if (lexer.check(Symbol.LEFTPAR)) {                            
+                if (!SymbolTable.globalTable.containsKey(name))
+                    error.signal("Chamada de função não existente");
                 return parseFuncStmt(name);
-            else
+            }
+            else {
+                if (!SymbolTable.localTable.containsKey(name))
+                    error.signal("Uso de variável não declarada");
                 return parseExprStmt(name);
+            }
         } else if (lexer.check(Symbol.PRINT))
             return parsePrintStmt();
         else if (lexer.check(Symbol.BREAK))
@@ -202,12 +214,16 @@ public class Compiler {
             values.add(parseOrTest());
         } while (lexer.accept(Symbol.COMMA));
         
-        lexer.accept(Symbol.SEMICOLON);
+        lexer.expect(Symbol.SEMICOLON);
         
         return new PrintStmt(values);
     }
     private SimpleStmt parseBreakStmt() {
         lexer.expect(Symbol.BREAK);
+        
+        if (loopCount <= 0)
+            error.signal("Uso de break fora de loop");
+        
         lexer.expect(Symbol.SEMICOLON);
         
         return new BreakStmt();
@@ -263,6 +279,8 @@ public class Compiler {
     private CompoundStmt parseWhileStmt() {
         lexer.expect(Symbol.WHILE);
         
+        loopCount++;
+        
         OrTest cond = parseOrTest();
         
         lexer.expect(Symbol.LEFTBRACE);
@@ -273,10 +291,14 @@ public class Compiler {
         
         lexer.expect(Symbol.RIGHTBRACE);
         
+        loopCount--;
+        
         return new WhileStmt(cond, stmts);
     }
     private CompoundStmt parseForStmt() {
         lexer.expect(Symbol.FOR);
+        
+        loopCount++;
         
         String iter = lexer.obtain(Symbol.IDENT);
         
@@ -299,6 +321,8 @@ public class Compiler {
             stmts.add(parseStmt());
         
         lexer.expect(Symbol.RIGHTBRACE);
+        
+        loopCount--;
         
         return new ForStmt(iter, begin, end, stmts);
     }
