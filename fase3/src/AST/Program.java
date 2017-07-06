@@ -20,6 +20,6 @@ public class Program {
         pw.println("");
         
         for (FuncDef funcDef: funcDefs)
-            funcDef.genC();
+            funcDef.genC(pw);
     }
 }

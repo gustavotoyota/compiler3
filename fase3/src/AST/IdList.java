@@ -1,17 +1,9 @@
 package AST;
 
+import Auxiliar.PW;
+
 import java.util.ArrayList;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author Gustavo
- */
 public class IdList {
     public final ArrayList<NameArray> nameArrays;
 
@@ -19,4 +11,13 @@ public class IdList {
         this.nameArrays = nameArrays;
     }
     
+    public void genC(PW pw, String type) {
+        for (int i = 0; i < nameArrays.size(); ++i) {
+            nameArrays.get(i).genC(pw);
+            if ("char".equals(type))
+                pw.print("[20]");
+            if (i < nameArrays.size()-1)
+                pw.print(", ");
+        }
+    }
 }

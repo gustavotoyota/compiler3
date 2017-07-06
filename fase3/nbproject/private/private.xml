@@ -3,9 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Gustavo/Arquivos/UFSCar/Compiladores/Trabalho/Fase%203/compiler3/fase3/src/Lexer/Group.java</file>
-            <file>file:/C:/Users/Gustavo/Arquivos/UFSCar/Compiladores/Trabalho/Fase%203/compiler3/fase3/src/Compiler.java</file>
-            <file>file:/C:/Users/Gustavo/Arquivos/UFSCar/Compiladores/Trabalho/Fase%203/compiler3/fase3/src/Lexer/Lexer.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/Auxiliar/Variable.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/AST/ExprStmt.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/AST/DeclGroup.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/AST/Atom.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/Lexer/Lexer.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/AST/IdList.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/AST/PrintStmt.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/Compiler.java</file>
+            <file>file:/C:/Users/Pedro%20Pires/Documents/NetBeansProjects/fase3/src/Auxiliar/SymbolTable.java</file>
         </group>
     </open-files>
 </project-private>

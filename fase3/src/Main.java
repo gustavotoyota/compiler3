@@ -38,11 +38,7 @@ public class Main {
             return;
         }
 
-        // Verificar o sucesso da leitura
-        if (numChRead != file.length()) {
-            System.out.println("Read error");
-            return;
-        }
+        
         
         // Fechar o arquivo de input
         try {

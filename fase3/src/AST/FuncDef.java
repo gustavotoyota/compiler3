@@ -1,17 +1,50 @@
 package AST;
 
+import Auxiliar.PW;
+import Auxiliar.SymbolTable;
+
 public class FuncDef {
-    public final String name;
-    public final ArgsList argsList;
-    public final String type;
-    public final Body body;
+    public String name;
+    public ArgsList argsList;
+    public String type;
+    public Body body;
     
     public FuncDef(String name, ArgsList argsList, String type, Body body) {
-        this.name =name;
+        this.name = name;
         this.argsList = argsList;
         this.type = type;
         this.body = body;
     }
-    public void genC() {
+    
+    public void genC(PW pw) {
+        String funcType;                
+        switch (type) {
+            case "boolean":
+                funcType = "int";
+                break;
+            case "string":
+                funcType = "char*";
+                break;
+            case "float":
+                funcType = "double";
+                break;
+            default:
+                funcType = type;
+                break;
+        }
+        
+        SymbolTable.localTable = SymbolTable.globalTable.get(name);
+        
+        pw.indent();
+        pw.print(funcType + " " + name + "(");
+        if (argsList != null)
+            argsList.genC(pw);        
+        pw.println(") {");
+        pw.increment();
+        body.genC(pw);
+        pw.decrement();
+        pw.indent();
+        pw.println("}");
+        pw.println("");
     }
 }

@@ -1,15 +1,7 @@
 package AST;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import Auxiliar.PW;
 
-/**
- *
- * @author Gustavo
- */
 public class Details {
     public final boolean isFunc;
     public final OrList orList;
@@ -23,5 +15,21 @@ public class Details {
         this.isInt = isInt;
         this.numIndex = numIndex;
         this.identIndex = identIndex;
+    }
+    
+    public void genC(PW pw) {
+        if (isFunc) {
+            pw.print("(");
+            if (orList != null)
+                orList.genC(pw);
+            pw.print(")");
+        } else {
+            pw.print("[");
+            if (isInt)
+                pw.print(Integer.toString(numIndex.intValue));
+            else
+                pw.print(identIndex);
+            pw.print("]");
+        }
     }
 }

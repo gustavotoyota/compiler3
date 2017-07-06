@@ -1,15 +1,8 @@
 package AST;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import Auxiliar.PW;
+import Lexer.Symbol;
 
-/**
- *
- * @author Gustavo
- */
 public class Factor {
     public final String signal;
     public final AtomExpr atomExpr;
@@ -19,5 +12,21 @@ public class Factor {
         this.signal = signal;
         this.atomExpr = atomExpr;
         this.exponent = exponent;
+    }
+    
+    public void genC(PW pw) {                        
+        if (exponent != null) {
+            if (atomExpr.atom.type == Symbol.NUMBER && atomExpr.atom.number.isInt)
+                pw.print("(int)");
+            pw.print("pow(");
+        }
+        if ("-".equals(signal))
+            pw.print(signal);
+        atomExpr.genC(pw);
+        if (exponent != null) {
+            pw.print(", ");
+            exponent.genC(pw);
+            pw.print(")");
+        }
     }
 }

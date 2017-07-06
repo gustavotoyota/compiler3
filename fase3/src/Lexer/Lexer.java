@@ -30,6 +30,10 @@ public class Lexer {
         keywordsTable.put("string", Symbol.STRING);
         keywordsTable.put("True", Symbol.TRUE);
         keywordsTable.put("while", Symbol.WHILE);
+        keywordsTable.put("def", Symbol.DEF);
+        keywordsTable.put("def", Symbol.DEF);
+        keywordsTable.put("void", Symbol.VOID);
+        keywordsTable.put("return", Symbol.RETURN);
     }
     
     public Lexer(char[] input, CompilerError error) {
@@ -70,7 +74,8 @@ public class Lexer {
             if (value == null)
                 token = Symbol.IDENT;
             else 
-                token = value;                
+                token = value;  
+            isIntValue = false;
         } else if (Character.isDigit(input[tokenPos])) {                
             String s = "";
             
